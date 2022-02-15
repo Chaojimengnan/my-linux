@@ -1,5 +1,9 @@
 #pragma once
 
+#include <unistd.h>
+
+#include <string>
+
 #ifdef _DEBUG
 
 /**
@@ -8,7 +12,6 @@
  */
 
 #include <iostream>// For printf()
-#include <unistd.h>// For gettid()
 #include <errno.h> // For errno
 #include <string.h>// For strerror()
 
@@ -29,6 +32,4 @@
 
 #endif
 
-
-#include <dirent.h>
 
