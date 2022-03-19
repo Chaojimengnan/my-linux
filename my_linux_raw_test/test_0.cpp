@@ -1,5 +1,5 @@
-#include <unistd.h>
 #include <iostream>
+#include <unistd.h>
 
 constexpr auto BUFFSIZE = 4096;
 
@@ -9,7 +9,7 @@ constexpr auto BUFFSIZE = 4096;
 void test_0()
 {
     int read_count = 0;
-    char buffer[BUFFSIZE] = {0};
+    char buffer[BUFFSIZE] = { 0 };
 
     while ((read_count = read(STDIN_FILENO, buffer, BUFFSIZE)) > 0)
     {
@@ -17,11 +17,10 @@ void test_0()
         {
             std::cerr << "写入错误!\n";
         }
-        
     }
-    if (read_count < 0) std::cerr << "read error!\n";
+    if (read_count < 0)
+        std::cerr << "read error!\n";
 }
-
 
 /**
  * @brief 打印当前进程的用户ID和组ID
@@ -31,6 +30,8 @@ void test_1()
 {
     std::cout << getuid() << "," << getgid() << "\n";
 }
+
+#include <fcntl.h>
 
 int main()
 {

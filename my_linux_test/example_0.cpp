@@ -1,19 +1,20 @@
 #include "example_0.h"
 #include "stdafx.h"
-
+#include <utility>
+#include <iostream>
 
 // 测试myls
 void example_0()
 {
     // 获取当前目录的目录流
-    auto dir_stream = mli::opendir(".");
+    auto* dir_stream = mli::opendir(".");
 
-    dirent* dir_item = nullptr; 
-    while (dir_item = mli::readdir(dir_stream))
+    dirent* dir_item = nullptr;
+    while ((dir_item = mli::readdir(dir_stream)) != nullptr)
     {
         std::cout << dir_item->d_name << "\n";
     }
-    
+
     mli::closedir(dir_stream);
 }
 
@@ -36,4 +37,9 @@ void example_0_1()
     std::cout << "POSIX版本:" << mli::sysconf(_SC_VERSION) << "\n";
 
     std::cout << "OPEN_MAX:" << mli::sysconf(_SC_OPEN_MAX) << "\n";
+
+    auto val = mli::sysconf(_SC_ATEXIT_MAX);
+    std::cout << "ATEXIT_MAX:" << val << "\n";
+    
+    
 }
