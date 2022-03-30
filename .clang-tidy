@@ -15,6 +15,7 @@ cert-*,
 -cppcoreguidelines-avoid-c-arrays,
 -cppcoreguidelines-avoid-magic-numbers,
 -cppcoreguidelines-non-private-member-variables-in-classes,
+-cppcoreguidelines-pro-type-vararg,
 -misc-non-private-member-variables-in-classes
 '
 
