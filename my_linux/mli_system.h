@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
-#include <dirent.h> //目录项
+#include <dirent.h>   //目录项
+#include <sys/stat.h> //文件状态
 
 namespace mli {
 
@@ -105,6 +106,75 @@ inline long pathconf(const std::string_view& path, int name)
 inline long fpathconf(int fd, int name)
 {
     auto val = ::fpathconf(fd, name);
+    GET_ERROR_MSG_OUTPUT();
+    return val;
+}
+
+/**
+ * @brief 从pathname指定的文件获取信息，并存放在statbuf指定的结构体中，
+ * 文件本身不需要权限，但是pathname中的所有目录都需要执行(搜索)权限。stat与
+ * lstat区别在于，当路径名指定一个符号链接，那么stat返回符号链接指向文件的信息，
+ * 而lstat返回符号链接本身的信息。
+ * 
+ * @param pathname 要获取信息的文件路径名
+ * @param statbuf 用于接受pathname指定文件信息的结构体
+ * @return int 若成功返回0，若出错，返回-1并设置errno
+ */
+inline int stat(const std::string_view& pathname, struct stat* statbuf)
+{
+    auto val = ::stat(pathname.data(), statbuf);
+    GET_ERROR_MSG_OUTPUT();
+    return val;
+}
+
+/**
+ * @brief 从fd指定的文件获取信息，并存放在statbuf指定的结构体中，
+ * 与stat不同，fstat使用fd指定一个文件，而stat使用路径字符串。
+ * 
+ * @param fd 要获取信息的文件fd
+ * @param statbuf 用于接受fd指定文件信息的结构体
+ * @return int 若成功返回0，若出错，返回-1并设置errno
+ */
+inline int fstat(int fd, struct stat* statbuf)
+{
+    auto val = ::fstat(fd, statbuf);
+    GET_ERROR_MSG_OUTPUT();
+    return val;
+}
+
+/**
+ * @brief 从pathname指定的文件获取信息，并存放在statbuf指定的结构体中，
+ * 文件本身不需要权限，但是pathname中的所有目录都需要执行(搜索)权限。stat与
+ * lstat区别在于，当路径名指定一个符号链接，那么stat返回符号链接指向文件的信息，
+ * 而lstat返回符号链接本身的信息。
+ * 
+ * @param pathname 要获取信息的文件路径名
+ * @param statbuf 用于接受pathname指定文件信息的结构体
+ * @return int 若成功返回0，若出错，返回-1并设置errno
+ */
+inline int lstat(const std::string_view& pathname, struct stat* statbuf)
+{
+    auto val = ::lstat(pathname.data(), statbuf);
+    GET_ERROR_MSG_OUTPUT();
+    return val;
+}
+
+/**
+ * @brief 获取从dirfd开始，pathname指定的文件信息，并存放在statbuf指定的结构体中，
+ * 根据flags不同，行为会有不同变化。当pathname是一个绝对路径时，dirfd被忽略。
+ * 当pathname是一个相对路径时，pathname被解释为相对于dirfd的路径。dirfd可以为特殊值
+ * AT_FDCWD，表示当前工作目录。
+ * 
+ * @param dirfd 目录fd或特殊值AT_FDCWD
+ * @param pathname 若为相对路径，则相对于dirfd开始，若为绝对路径，则dirfd被忽略
+ * @param statbuf 用于接收指定文件信息的结构体
+ * @param flags 它可以0，或者AT_开头宏的组合(目前只有AT_SYMLINK_NOFOLLOW)
+ * @return int 若成功返回0，若出错，返回-1并设置errno
+ */
+inline int fstatat(int dirfd, const std::string_view& pathname, 
+    struct stat* statbuf, int flags)
+{
+    auto val = ::fstatat(dirfd, pathname.data(), statbuf, flags);
     GET_ERROR_MSG_OUTPUT();
     return val;
 }

@@ -1,0 +1,7 @@
+{
+  "name": "my-linux",
+  "version": "0.0.1",
+  "dependencies": [
+    "loerr"
+  ]
+}

@@ -40,6 +40,47 @@ void example_0_1()
 
     auto val = mli::sysconf(_SC_ATEXIT_MAX);
     std::cout << "ATEXIT_MAX:" << val << "\n";
+}
+
+const char* print_file_type(mode_t file_mode)
+{
+    if (S_ISREG(file_mode))
+        return "普通文件";
     
-    
+    if (S_ISDIR(file_mode))
+        return "目录文件";
+
+    if (S_ISCHR(file_mode))
+        return "字符特殊文件";
+
+    if (S_ISBLK(file_mode))
+        return "块特殊文件";
+
+    if (S_ISFIFO(file_mode))
+        return "管道或FIFO";
+
+    if (S_ISLNK(file_mode))
+        return "符号链接";
+
+    if (S_ISSOCK(file_mode))
+        return "套接字";
+
+    return "未知类型";
+}
+
+// 测试stat系列函数
+void example_0_2()
+{
+    struct stat my_stat{};
+    mli::stat("/home", &my_stat);
+
+    std::cout << print_file_type(my_stat.st_mode) << "\n";
+
+    auto file_fd = mli::creat("./kaka.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+
+    mli::fstat(file_fd, &my_stat);
+
+    std::cout << print_file_type(my_stat.st_mode) << "\n";
+
+    mli::close(file_fd);
 }
